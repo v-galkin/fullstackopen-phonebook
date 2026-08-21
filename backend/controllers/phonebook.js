@@ -17,7 +17,7 @@ const validatePhonebookEntry = async (body) => {
   }
 
   if (body.number.length < 8) {
-    return 'Number validation failed:Number cannot be less than 8 digits long';
+    return 'Number validation failed: Number cannot be less than 8 digits long';
   }
 
   return null;

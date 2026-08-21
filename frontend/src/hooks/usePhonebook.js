@@ -1,15 +1,27 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import phonebookService from '../services/phonebookService';
 
 const usePhonebook = () => {
   const [people, setPeople] = useState([]);
   // notification shape: { message: string, type: 'success' | 'error' }
   const [notification, setNotification] = useState(null);
+  const notificationTimeoutRef = useRef(null);
 
   // -------------- Logic --------------
   const showNotification = (message, type = 'success') => {
+    // setNotification({ message, type });
+    // setTimeout(() => setNotification(null), 5000);
+    if (notificationTimeoutRef.current) {
+      clearTimeout(notificationTimeoutRef.current);
+    }
+    
     setNotification({ message, type });
-    setTimeout(() => setNotification(null), 5000);
+    notificationTimeoutRef.current = setTimeout(() => {
+      setNotification(null);
+      notificationTimeoutRef.current = null;
+    }, 5000);
+
+    console.log(notificationTimeoutRef);
   };
 
   // -------------- Queries --------------
@@ -42,10 +54,14 @@ const usePhonebook = () => {
       number: newPersonData.number,
     };
 
-    phonebookService.create(personObject).then((returnedPerson) => {
-      showNotification(`Added '${returnedPerson.name}'`, 'success');
-      setPeople(people.concat(returnedPerson));
-    });
+    phonebookService.create(personObject)
+      .then((returnedPerson) => {
+        showNotification(`Added '${returnedPerson.name}'`, 'success');
+        setPeople(people.concat(returnedPerson));
+      })
+      .catch((error) => {
+        showNotification(error.response?.data?.error || 'Failed to add new phonebook entry', 'error');
+      })
   };
 
   // Update an existing Person

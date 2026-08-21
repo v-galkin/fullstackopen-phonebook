@@ -12,6 +12,10 @@ const validatePhonebookEntry = async (body) => {
     return 'Name already exists in the phonebook';
   }
 
+  if (body.name.length < 3) {
+    return 'Name validation failed: Name must be at least 3 chatacters long';
+  }
+
   return null;
 };
 

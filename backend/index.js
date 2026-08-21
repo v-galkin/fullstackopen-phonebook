@@ -13,9 +13,7 @@ connectToDatabase();
 app.use(express.json());
 app.use(express.static('dist'));
 
-app.use(
-  morgan(':method :url :status :res[content-length] - :response-time ms :body')
-);
+app.use(morgan(':method :url :status :res[content-length] - :response-time ms :body'));
 
 app.use('/api/phonebook', phonebookRouter);
 

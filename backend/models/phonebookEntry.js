@@ -3,7 +3,7 @@ const mongoose = require('mongoose');
 const phonebookSchema = new mongoose.Schema({
     name: String,
     number: {
-        type:string,
+        type: String,
         validate: {
             validator: function(v) {
                 return /^\d{2,3}-\d+$/.test(v);

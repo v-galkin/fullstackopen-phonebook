@@ -6,7 +6,8 @@
     "dev": "node --watch index.js",
     "build:ui": "rm -rf dist && cd ../frontend && npm run build && cp -r dist ../backend",
     "deploy:full": "npm run build:ui && git add . && git commit -m uibuild && git push",
-    "lint": "eslint ."
+    "lint": "eslint .", 
+    "lint:fix": "eslint . --fix"
   },
   "dependencies": {
     "dotenv": "^17.4.2",

@@ -1,26 +1,6 @@
 const phonebookRouter = require('express').Router()
 const PhonebookEntry = require('../models/phonebookEntry')
 
-// Get all phonebook entries from phonebook
-phonebookRouter.get('/api/phonebook', (request, response, next) => {
-  PhonebookEntry.find({})
-    .then((entries) => response.json(entries))
-    .catch((error) => next(error));
-});
-
-// Get phonebook entry from phonebook by id
-phonebookRouter.get('/api/phonebook/:id', (request, response, next) => {
-  PhonebookEntry.findById(request.params.id)
-    .then((phonebookEntry) => {
-      if (phonebookEntry) {
-        response.json(phonebookEntry);
-      } else {
-        response.status(404).end();
-      }
-    })
-    .catch((error) => next(error));
-});
-
 const validatePhonebookEntry = async (body) => {
   if (!body.name || !body.number) {
     return 'Name or number missing';
@@ -35,7 +15,9 @@ const validatePhonebookEntry = async (body) => {
   return null;
 };
 
-phonebookRouter.post('/api/phonebook', async (request, response, next) => {
+// ------------------ Backend API Endpoints ------------------
+// Create a new phonebook entry
+phonebookRouter.post('/', async (request, response, next) => {
   const body = request.body;
 
   try {
@@ -57,8 +39,42 @@ phonebookRouter.post('/api/phonebook', async (request, response, next) => {
   }
 });
 
+// Get all phonebook entries from phonebook
+phonebookRouter.get('/', (request, response, next) => {
+  PhonebookEntry.find({})
+    .then((entries) => response.json(entries))
+    .catch((error) => next(error));
+});
+
+// Get general information
+phonebookRouter.get('/info', (request, response, next) => {
+  PhonebookEntry.countDocuments({})
+    .then((phonebookLength) => {
+      const dateTime = new Date();
+
+      response.send(`
+        <p>Phonebook has info for ${phonebookLength} people.</p>
+        <p>${dateTime}</p>
+      `);
+    })
+    .catch((error) => next(error));
+});
+
+// Get phonebook entry from phonebook by id
+phonebookRouter.get('/:id', (request, response, next) => {
+  PhonebookEntry.findById(request.params.id)
+    .then((phonebookEntry) => {
+      if (phonebookEntry) {
+        response.json(phonebookEntry);
+      } else {
+        response.status(404).end();
+      }
+    })
+    .catch((error) => next(error));
+});
+
 // Update phonebook entry by id
-phonebookRouter.put('/api/phonebook/:id', (request, response, next) => {
+phonebookRouter.put('/:id', (request, response, next) => {
   const body = request.body;
 
   if (!body.name || !body.number) {
@@ -83,23 +99,9 @@ phonebookRouter.put('/api/phonebook/:id', (request, response, next) => {
 });
 
 // Delete phonebook entry by id
-phonebookRouter.delete('/api/phonebook/:id', (request, response, next) => {
+phonebookRouter.delete('/:id', (request, response, next) => {
   PhonebookEntry.findByIdAndDelete(request.params.id)
     .then(() => response.status(204).end())
-    .catch((error) => next(error));
-});
-
-// Get general information
-phonebookRouter.get('/info', (request, response, next) => {
-  PhonebookEntry.countDocuments({})
-    .then((phonebookLength) => {
-      const dateTime = new Date();
-
-      response.send(`
-        <p>Phonebook has info for ${phonebookLength} people.</p>
-        <p>${dateTime}</p>
-      `);
-    })
     .catch((error) => next(error));
 });
 

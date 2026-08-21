@@ -9,8 +9,6 @@ const usePhonebook = () => {
 
   // -------------- Logic --------------
   const showNotification = (message, type = 'success') => {
-    // setNotification({ message, type });
-    // setTimeout(() => setNotification(null), 5000);
     if (notificationTimeoutRef.current) {
       clearTimeout(notificationTimeoutRef.current);
     }
@@ -20,8 +18,6 @@ const usePhonebook = () => {
       setNotification(null);
       notificationTimeoutRef.current = null;
     }, 5000);
-
-    console.log(notificationTimeoutRef);
   };
 
   // -------------- Queries --------------

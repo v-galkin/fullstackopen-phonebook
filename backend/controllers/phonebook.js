@@ -16,7 +16,7 @@ const validatePhonebookEntry = async (body) => {
     return 'Name validation failed: Name must be at least 3 chatacters long';
   }
 
-  if (body.number < 8) {
+  if (body.number.length < 8) {
     return 'Number cannot be less than 8 digits long';
   }
 
